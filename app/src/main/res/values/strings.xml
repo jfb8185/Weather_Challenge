@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Weather Challenge</string>
+    <string name="city_et_hint_text">City Name</string>
+    <string name="lookup_btn_text">Lookup</string>
+</resources>
