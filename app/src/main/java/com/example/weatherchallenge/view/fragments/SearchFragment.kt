@@ -33,24 +33,28 @@ class SearchFragment: Fragment() {
         with(binding){
             lookupBtn.setOnClickListener{
                 val input = cityET.text.toString()
-                cityET.error = if (input.isBlank()) "Invalid Input" else ""
 
-                if (input.isNotBlank())
+                if (input.isNotBlank()) {
                     viewModel.getWeatherForCity(input)
-
-                val directions =
-                    SearchFragmentDirections.actionSearchFragmentToResultsFragment()
-                findNavController().navigate(directions)
+                } else {
+                    cityET.error = if (input.isBlank()) "Invalid Input" else ""
+                }
             }
 
             viewModel.weather.observe(viewLifecycleOwner) { resource ->
                 when (resource) {
                     is Resource.Loading -> {
                         updateUi(true)
+                        viewModel.shouldNavigate = true
                     }
                     is Resource.Success  -> {
                         updateUi(false)
-                        showToast(resource.data.toString())
+                        if (viewModel.shouldNavigate) {
+                            viewModel.shouldNavigate = false
+                            val directions =
+                                SearchFragmentDirections.actionSearchFragmentToResultsFragment()
+                            findNavController().navigate(directions)
+                        }
                     }
                     is Resource.Error -> {
                         updateUi(false)
